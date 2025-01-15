@@ -103,8 +103,8 @@ jobs:
           configuration: "configs/configuration_complex.json"
           owner: "mikepenz"
           repo: "release-changelog-builder-action"
-          fromTag: "v0.0.1"
-          toTag: "v0.0.3"
+          fromTag: "v1.0.0"
+          toTag: "v1.0.5"
           token: ${{ secrets.GH_TOKEN }}
 
       - name: Echo Complex Configuration Changelog

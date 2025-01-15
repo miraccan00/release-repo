@@ -7,6 +7,3 @@ def count():
         
 def say_my_name(name):
     print(f"Hello, {name}!")
-
-def some_feature():
-    print("This is a feature")

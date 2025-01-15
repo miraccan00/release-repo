@@ -1,0 +1,28 @@
+name: Release Changelog Builder
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Örneğin, v1.0.0 gibi etiketlere tetiklenir
+
+jobs:
+  build_changelog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Depoyu Klonla
+        uses: actions/checkout@v3
+
+      - name: Sürüm Notlarını Oluştur
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: GitHub Sürümünü Oluştur
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          body: ${{ steps.build_changelog.outputs.changelog }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

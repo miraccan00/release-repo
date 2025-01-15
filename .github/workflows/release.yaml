@@ -46,7 +46,7 @@ jobs:
               ]
             }
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: GitHub Sürümünü Oluştur
         uses: softprops/action-gh-release@v1
@@ -54,4 +54,4 @@ jobs:
           tag_name: ${{ github.ref }}
           body: ${{ steps.build_changelog.outputs.changelog }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

@@ -12,12 +12,41 @@ jobs:
     steps:
       - name: Depoyu Klonla
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Sürüm Notlarını Oluştur
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v5
+        with:
+          configurationJson: |
+            {
+              "template": "# {{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n{{UNCATEGORIZED}}\n</details>",
+              "categories": [
+                {
+                  "title": "## 🚀 Özellikler",
+                  "labels": ["feature"]
+                },
+                {
+                  "title": "## 🐛 Düzeltmeler",
+                  "labels": ["fix"]
+                },
+                {
+                  "title": "## 🧪 Testler",
+                  "labels": ["test"]
+                },
+                {
+                  "title": "## 💬 Diğer",
+                  "labels": ["other"]
+                },
+                {
+                  "title": "## 📦 Bağımlılıklar",
+                  "labels": ["dependencies"]
+                }
+              ]
+            }
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: GitHub Sürümünü Oluştur
         uses: softprops/action-gh-release@v1
@@ -25,4 +54,4 @@ jobs:
           tag_name: ${{ github.ref }}
           body: ${{ steps.build_changelog.outputs.changelog }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

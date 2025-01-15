@@ -1,0 +1,91 @@
+name: 'Release Changelog Builder'
+description: 'A GitHub action that builds your release notes / changelog fast, easy and exactly the way you want.'
+author: 'Mike Penz'
+branding:
+  icon: 'award'  
+  color: 'green'
+inputs:
+  configurationJson:
+    description: 'Defines the configuration json. If provided, will be prefered over `configuration`.'
+  configuration:
+    description: 'Defines the relative path to the configuration file.'
+  path:
+    description: 'Defines the directory the repo is located in (checkout directory)'
+  owner:
+    description: 'Defines the owner of the repository to create the changelog for'
+  repo:
+    description: 'Defines the repository to create the changelog for'
+  fromTag:
+    description: 'Defines the previous tag to compare against'
+  toTag:
+    description: 'Defines the newly tag created'
+  includeOpen:
+    description: 'Defines if the changelog should include open PRs'
+    default: "false"
+  ignorePreReleases:
+    description: 'Defines if the action will only use full releases to compare against (Only used if fromTag is not defined). E.g. for 1.0.1... 1.0.0-rc02 <- ignore, 1.0.0 <- pick'
+    default: "false"
+  failOnError:
+    description: 'Defines if the action should result in a build failure, if an error was discovered'
+    default: "false"
+  fetchViaCommits:
+    description: 'Defines if PRs are fetched via the commits identified. This will do 1 API request per commit -> Best for scenarios with squash merges | Or shorter from-to diffs (< 10 commits) | Also effective for shorters diffs for very old PRs'
+    default: "false"
+  fetchReviewers:
+    description: 'Will enable fetching the users/reviewers who approved the PR'
+    default: "false"
+  fetchReleaseInformation:
+    description: 'Will enable fetching release information for the tags. E.g. creation date'
+    default: "false"
+  fetchReviews:
+    description: 'Will enable fetching the reviews (comments) attached to the PR'
+    default: "false"
+  mode:
+    description: 'Defines the mode used to retrieve the information. Available options: [`PR`, `COMMIT`, `HYBRID`]. Defaults to `PR`.'
+  commitMode:
+    description: '[Deprecated] Enables the commit based mode. This mode generates changelogs based on the commits. Please note that this lacks a lot of features only possible with PRs.'
+    default: "false"
+  outputFile:
+    description: 'If defined, the changelog will get written to this file. (relative to the checkout dir)'
+  token:
+    description: 'Defines the token to use to execute the git API requests with, uses `env.GITHUB_TOKEN` by default'
+    default: ${{ github.token }}
+  baseUrl:
+    description: 'Defines the base url for GitHub Enterprise authentication, uses `https://api.github.com` by default'
+  exportCache:
+    description: 'If enabled, the action will export the collected data to the cache. This is disabled by default. Can be passed to a follow up run via `cache`.'
+    default: "false"
+  exportOnly:
+    description: 'If enabled, the action will only collect the data and terminate afterwards. Data can then be consumed by steps afterwards. This requires `exportCache` to be enabled'
+    default: "false"
+  cache:
+    description: 'Provide the cache of a previous run. Allows to re-use collected information multiple times to generate different release notes. Requires `exportCache` to be enabled for the previous run.'
+  platform:
+    description: 'Defines the platform the action is run on. Available options: [`github`, `gitea`]. Defaults to `github`.'
+    default: "github"
+outputs:
+  changelog:
+    description: The built release changelog built from the merged pull requests
+  pull_requests:
+    description: A comma seperated list of PR numbers that were merged
+  owner:
+    description: Specifies the owner of the repository processed
+  repo:
+    description: Describes the repository name, which was processed
+  fromTag:
+    description: Defines the `fromTag` which describes the lower bound to process pull requests for
+  toTag:
+    description: Defines the `toTag` which describes the upper bound to process pull request for
+  failed:
+    description: Defines if there was an issue with the action run, and the changelog may not have been generated correctly. [true, false]
+  categorized_prs:
+    description: Count of categorized pull requests
+  uncategorized_prs:
+    description: Count of uncategorized pull requests
+  open_prs:
+    description: Count of open pull requests. Only fetched if `includeOpen` is enabled.
+  cache:
+    description: 'Cache containing this runs data. Allows to re-use collected information multiple times to generate different release notes.'
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

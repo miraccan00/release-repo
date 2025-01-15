@@ -7,3 +7,7 @@ def count():
         
 def say_my_name(name):
     print(f"Hello, {name}!")
+
+
+def x_y(x, y):
+    return x + y

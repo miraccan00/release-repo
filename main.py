@@ -10,6 +10,9 @@ def say_my_name(name):
 
 def some_feature():
     print("This is a feature")
+    
+def feature_x():
+    print("This is feature x")
 
 def feature_2():
     print("This is another feature")

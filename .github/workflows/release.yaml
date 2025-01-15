@@ -17,20 +17,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set Node.js 20.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-
-      - name: Install NPM
-        run: |
-          npm install
-
-      - name: Run NPM
-        run: |
-          npm run all
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Echo Configuration without Checkout Changelog
+        run: echo "CHANGELOG"
 
   test:
     if: github.event_name  == 'pull_request'

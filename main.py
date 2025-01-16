@@ -11,6 +11,7 @@ def say_my_name(name):
 
 def x_y(x, y):
     return x + y
-
+def new_feature():
+    print("New feature added")
 def some_feature_added():
     print("Some feature added")

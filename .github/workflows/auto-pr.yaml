@@ -1,0 +1,26 @@
+name: Auto PR from Feature Branch to Develop
+
+on:
+  push:
+    branches-ignore: # Bu Workflow'u belirli branchler dışında çalıştır
+      - develop
+    branches:        # Bu Workflow'u sadece develop dışında herhangi bir branch'e push yapıldığında çalıştır
+      - '**'
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v3
+
+    - name: Create Pull Request
+      uses: repo-sync/pull-request@v2 # PR açmak için bir hazır Action kullanıyoruz
+      with:
+        source_branch: ${{ github.ref_name }}  # Push yapılan branch (örneğin feature/branch-name)
+        destination_branch: develop           # PR'ın açılacağı hedef branch
+        pr_title: 'Auto PR: ${{ github.ref_name }} -> develop' # PR başlığı
+        pr_body: 'This pull request was automatically created by GitHub Actions.' # PR açıklaması
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

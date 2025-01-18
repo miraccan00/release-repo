@@ -18,3 +18,6 @@ def some_feature_added():
     
 def new_feature_6():
     print("New feature added")
+
+def new_feature_6_2():
+    print("New feature added")

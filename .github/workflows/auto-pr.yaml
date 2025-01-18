@@ -1,0 +1,31 @@
+name: Auto PR Management
+
+on:
+  push:
+    branches: 
+      - '**'  # All branches
+      - '!develop'
+      - '!master'
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v3
+
+    - name: Create Pull Request
+      uses: repo-sync/pull-request@v2
+      with:
+        source_branch: ${{ github.ref_name }}
+        destination_branch: develop
+        pr_title: 'Auto PR: ${{ github.ref_name }} -> develop - Commit: ${{ github.event.head_commit.message }}'
+        pr_body: |
+          This pull request was automatically created by GitHub Actions.
+          - **Source branch**: ${{ github.ref_name }}
+          - **Commit Message**: ${{ github.event.head_commit.message }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+

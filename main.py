@@ -36,3 +36,6 @@ def some_feature_xy():
     
 def some_feature_xyz():
     print("Some feature added")
+
+def some_feature_11():
+    print("Some feature added")

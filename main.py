@@ -18,6 +18,3 @@ def some_feature_added():
     
 def some_feature_5():
     print("Some feature added")
-
-def some_feature_6():
-    print("Some feature added")

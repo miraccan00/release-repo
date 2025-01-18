@@ -1,0 +1,58 @@
+name: Auto PR and Label Management
+
+on:
+  push:
+    branches: # Bu Workflow'u sadece develop ve master dışında herhangi bir branch'e push yapıldığında çalıştır
+      - '**'  # Tüm branch'ler
+      - '!develop' # develop branch'i hariç
+      - '!master'  # master branch'i hariç
+
+jobs:
+  auto-pr-and-label:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Repository'yi Checkout Et
+    - name: Checkout the repository
+      uses: actions/checkout@v3
+
+    # 2. Otomatik PR Oluştur
+    - name: Create Pull Request
+      uses: repo-sync/pull-request@v2
+      with:
+        source_branch: ${{ github.ref_name }}
+        destination_branch: develop
+        pr_title: 'Auto PR: ${{ github.ref_name }} -> develop - Commit: ${{ github.event.head_commit.message }}'
+        pr_body: |
+          This pull request was automatically created by GitHub Actions.
+          - **Source branch**: ${{ github.ref_name }}
+          - **Commit Message**: ${{ github.event.head_commit.message }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+    # 3. PR'a Label Ekle
+    - name: Add Label Based on Branch Name
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: |
+        echo "Branch Name: ${{ github.ref_name }}"
+        echo "PR Number: ${{ github.event.pull_request.number }}"
+
+        # Branch adına göre label ekle
+        if [[ "${{ github.ref_name }}" == feature/* ]]; then
+          echo "Adding 'feature' label..."
+          curl -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels \
+            -d '{"labels": ["feature"]}' -v
+        elif [[ "${{ github.ref_name }}" == hotfix/* ]]; then
+          echo "Adding 'hotfix' label..."
+          curl -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels \
+            -d '{"labels": ["hotfix"]}' -v
+        else
+          echo "No matching label found for branch: ${{ github.ref_name }}"
+        fi

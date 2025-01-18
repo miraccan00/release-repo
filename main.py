@@ -15,3 +15,6 @@ def new_feature():
     print("New feature added")
 def some_feature_added():
     print("Some feature added")
+    
+def some_feature_5():
+    print("Some feature added")

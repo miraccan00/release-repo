@@ -2,10 +2,10 @@ name: Auto PR from Feature Branch to Develop
 
 on:
   push:
-    branches: # Bu Workflow'u sadece develop dışında herhangi bir branch'e push yapıldığında çalıştır
-      - '**' # Herhangi bir branch için çalışır
-      - '!develop' # Ancak develop branch'ini hariç tutar
-      - '!master'
+    branches: # Bu Workflow'u sadece develop ve master dışında herhangi bir branch'e push yapıldığında çalıştır
+      - '**'  # Tüm branch'ler
+      - '!develop' # develop branch'i hariç
+      - '!master'  # master branch'i hariç
 
 jobs:
   create-pull-request:
@@ -20,7 +20,10 @@ jobs:
       with:
         source_branch: ${{ github.ref_name }}
         destination_branch: develop
-        pr_title: 'Auto PR: ${{ github.ref_name }} -> develop'
-        pr_body: 'This pull request was automatically created by GitHub Actions.'
+        pr_title: 'Auto PR: ${{ github.ref_name }} -> develop - Commit: ${{ github.event.head_commit.message }}'
+        pr_body: |
+          This pull request was automatically created by GitHub Actions.
+          - **Source branch**: ${{ github.ref_name }}
+          - **Commit Message**: ${{ github.event.head_commit.message }}
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
